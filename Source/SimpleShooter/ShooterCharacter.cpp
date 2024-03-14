@@ -2,6 +2,8 @@
 
 
 #include "ShooterCharacter.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -15,7 +17,16 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController) 
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (Subsystem)
+		{
+			Subsystem->AddMappingContext(ShooterMappingContext, 0);
+		}
+	}
 }
 
 // Called every frame
@@ -30,5 +41,31 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) 
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AShooterCharacter::Jump);
+	}
 }
 
+void AShooterCharacter::Move(const FInputActionValue& Value)
+{
+	const FVector CurrentValue = Value.Get<FVector>();
+	AddMovementInput(GetActorForwardVector(), CurrentValue.X);
+	AddMovementInput(GetActorRightVector(), CurrentValue.Y);
+}
+
+void AShooterCharacter::Look(const FInputActionValue& Value)
+{
+	const FVector CurrentValue = Value.Get<FVector>();
+	float DeltaTime = GetWorld()->GetDeltaSeconds();
+
+	AddControllerPitchInput(CurrentValue.Y * RotationRate * DeltaTime);
+	AddControllerYawInput(CurrentValue.X * RotationRate * DeltaTime);
+}
+
+void AShooterCharacter::Jump()
+{
+	Super::Jump();
+}
