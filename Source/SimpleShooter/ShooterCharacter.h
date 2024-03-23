@@ -37,6 +37,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BLueprintReadOnly, Category = "Input")
 	UInputAction* JumpAction;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* ShootAction;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -57,5 +60,6 @@ private:
 	void SetupEnhancedInputComponent();
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Shoot();
 
 };
