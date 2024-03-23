@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Gun.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 AGun::AGun()
@@ -40,6 +41,13 @@ void AGun::PullTrigger()
 	{
 		FVector ShotDirection = -ViewpointRotation.Vector();
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Impact, HitResult.ImpactPoint, ShotDirection.Rotation());
+
+		AActor *HitActor = HitResult.GetActor();
+		if (HitActor)
+		{
+			FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+			HitActor->TakeDamage(Damage, DamageEvent, OwnerController, this);
+		}
 	}
 }
 
