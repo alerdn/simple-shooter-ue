@@ -30,6 +30,6 @@ void AShooterAIController::Tick(float DeltaTime)
     }
     else
     {
-        Blackboard->ClearValue(TEXT("LastKnownPlayerLocation"));
+        Blackboard->ClearValue(TEXT("PlayerLocation"));
     }
 }
