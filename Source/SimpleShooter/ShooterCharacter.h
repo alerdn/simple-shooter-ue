@@ -46,6 +46,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
+	
+	void Shoot();
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -65,6 +67,5 @@ private:
 	void SetupEnhancedInputComponent();
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void Shoot();
 
 };
