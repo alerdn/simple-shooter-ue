@@ -68,13 +68,16 @@ float AShooterCharacter::TakeDamage(float DamageAmount, struct FDamageEvent cons
 	
 	if(IsDead())
 	{
-		DetachFromControllerPendingDestroy();
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		ASimpleShooterGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>();
 		if (GameMode)
 		{
 			GameMode->PawnKilled(this);
 		}
+
+		// Remove o controller do pawn
+		DetachFromControllerPendingDestroy();
+		// Desativa colisão
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);		
 	}
 
 	return DamageToApply;
