@@ -8,7 +8,7 @@ void AShooterPlayerController::BeginPlay()
 {
     Super::BeginPlay();
 
-    UUserWidget *StartScreen = CreateWidget(this, StartScreenClass);
+    StartScreen = CreateWidget(this, StartScreenClass);
     if (StartScreen)
     {
         StartScreen->AddToViewport();
@@ -17,10 +17,24 @@ void AShooterPlayerController::BeginPlay()
     }
 }
 
+void AShooterPlayerController::StartGame()
+{
+    StartScreen->RemoveFromParent();
+    SetShowMouseCursor(false);
+    SetInputMode(FInputModeGameOnly());
+
+    HUD = CreateWidget(this, HUDClass);
+    if (HUD)
+    {
+        HUD->AddToViewport();
+    }
+}
+
 void AShooterPlayerController::GameHasEnded(class AActor *EndGameFocus, bool bIsWinner)
 {
     Super::GameHasEnded(EndGameFocus, bIsWinner);
 
+    HUD->RemoveFromParent();
     if (bIsWinner)
     {
         UUserWidget *WinScreen = CreateWidget(this, WinScreenClass);

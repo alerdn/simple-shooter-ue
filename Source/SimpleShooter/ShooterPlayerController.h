@@ -6,9 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "ShooterPlayerController.generated.h"
 
-/**
- * 
- */
+class UUserWidget;
+
 UCLASS()
 class SIMPLESHOOTER_API AShooterPlayerController : public APlayerController
 {
@@ -17,21 +16,31 @@ class SIMPLESHOOTER_API AShooterPlayerController : public APlayerController
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
+	void StartGame();
+
 public:
 	virtual void GameHasEnded(class AActor* EndGameFocus = nullptr, bool bIsWinner = false) override;
 
 private:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> StartScreenClass;
+	TSubclassOf<UUserWidget> StartScreenClass;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> WinScreenClass;
+	TSubclassOf<UUserWidget> HUDClass;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> LoseScreenClass;
+	TSubclassOf<UUserWidget> WinScreenClass;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> LoseScreenClass;
 
 	UPROPERTY(EditAnywhere)
 	float RestartDelay = 5.f;
 
 	FTimerHandle RestartTimer;
+
+	UPROPERTY()
+	UUserWidget* StartScreen;
+	UPROPERTY()
+	UUserWidget* HUD;
 
 };
